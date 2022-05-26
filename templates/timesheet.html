@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<script>
+    $(document).ready(function() {
+        $('#add_timesheet_record').click(function() {
+            $('.ui.modal').modal('show');
+        })
+        $('#save').click(function() {
+            var employee_id_data = $('#employee_id_data').val();
+            var date_data = $('#date_data').val();
+            var number_data = $('#number_data').val();
+            $.ajax({
+                url: '/timesheet',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "employee_id": employee_id_data,
+                    "date": date_data,
+                    "amount_of_hours_worked": number_data
+                }),
+                dataType: 'json'
+            })
+        })
+    });
+</script>
+
+<form>
+<div class="ui input focus">
+    <input name="employee_id" type="text" placeholder="Type the employee id...">
+</div>
+
+<div class="ui input focus">
+    <input name="date" type="text" placeholder="Type the date...">
+</div>
+
+<button type="submit" class="ui primary button">Filter</button>
+</form>
+
+<div>
+    <button id="add_timesheet_record" class="ui primary button">
+        Add Timesheet Record
+    </button>
+</div>
+
+<table class="ui very basic collapsing celled table">
+    <thead>
+      <tr>
+        <th>Employee ID</th>
+        <th>Date</th>
+        <th>Amount of Hours</th>
+    </tr></thead>
+    <tbody>
+        {% for timesheet in timesheets %}
+      <tr>
+        <td>{{ timesheet.employee_id }}</td>
+        <td>{{ timesheet.date }}</td>
+        <td>{{ timesheet.amount_of_hours_worked }}</td>
+      </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+<div class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+      Add Timesheet
+    </div>
+    <div class="content">
+        <div class="ui form">
+            <div class="three fields">
+              <div class="field">
+                <label>Employee ID</label>
+                <input id="employee_id_data" type="number" placeholder="Employee ID">
+              </div>
+              <div class="field">
+                <label>Date</label>
+                <input id="date_data" type="date" placeholder="Employee Name">
+              </div>
+              <div class="field">
+                <label>Amount of hours worked</label>
+                <input id="number_data" type="number" placeholder="Number of hours">
+              </div>
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+      <div id="save" class="ui positive right labeled icon button">
+        Register Timesheet
+        <i class="plus icon"></i>
+      </div>
+    </div>
+</div>
+{% endblock %}

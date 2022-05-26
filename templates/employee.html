@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<script>
+    $(document).ready(function() {
+        $('#add_new_employee').click(function() {
+            $('.ui.modal').modal('show');
+        })
+        $('#save').click(function() {
+            var employee_id_data = $('#employee_id_data').val();
+            var employee_name_data = $('#employee_name_data').val();
+            $.ajax({
+                url: '/employee',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "employee_id": employee_id_data,
+                    "employee_name": employee_name_data
+                }),
+                dataType: 'json'
+            })
+        })
+    });
+</script>
+
+<form>
+<div class="ui input focus">
+    <input name="employee_id" type="text" placeholder="Type the employee id...">
+</div>
+
+<button type="submit" class="ui primary button">Filter</button>
+</form>
+
+<div>
+    <button id="add_new_employee" class="ui primary button">
+        Add New Employee
+    </button>
+</div>
+
+<table class="ui very basic collapsing celled table">
+    <thead>
+      <tr>
+        <th>Employee ID</th>
+        <th>Employee Name</th>
+    </tr></thead>
+    <tbody>
+        {% for employee in employees %}
+      <tr>
+        <td>{{ employee.employee_id }}</td>
+        <td>{{ employee.employee_name }}</td>
+      </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+
+<div class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+      Add Employee
+    </div>
+    <div class="content">
+        <div class="ui form">
+            <div class="three fields">
+              <div class="field">
+                <label>Employee ID</label>
+                <input id="employee_id_data" type="number" placeholder="Employee ID">
+              </div>
+              <div class="field">
+                <label>Employee name</label>
+                <input id="employee_name_data" type="text" placeholder="Employee Name">
+              </div>
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+      <div id="save" class="ui positive right labeled icon button">
+        Register Employee
+        <i class="plus icon"></i>
+      </div>
+    </div>
+</div>
+{% endblock %}
